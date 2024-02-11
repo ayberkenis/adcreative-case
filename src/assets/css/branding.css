@@ -1,0 +1,41 @@
+/* 
+branding.css file contains the branding styles for the application.
+All attributes here can be used by the `var()` function in the CSS file.
+*/
+
+/* Branding colors */
+@font-face {
+    font-family: Gilroy;
+    src: url('../fonts/Gilroy/Gilroy-Regular.ttf');
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: GilroyBold;
+    src: url('../fonts/Gilroy/Gilroy-Black.ttf');
+    font-weight: 700;
+
+}
+
+@font-face {
+    font-family: 'RickAndMorty';
+    src: url('../fonts/RickAndMorty/get_schwifty.ttf');
+}
+
+:root {
+    --primary-color: "#ff3067";
+    --secondary-color: "#3b2a82";
+    --medium-blue: #5014ad;
+    --indian-red: #ff3067;
+    --general-purple: #3b2a82;
+    --midnight-blue: #1e1541;
+    --medium-purple: #7a719b;
+    --slate-blue: #7762ce;
+    --ghost-white: #f2effb;
+    --medium-purple-2: #787198;
+    --pale-violet-red: #ff7298;
+    --white: white;
+    --gold: #fbc822;
+    --new-site-text-purple: #605880;
+    --30-white: rgba(255,255,255,.3);
+}

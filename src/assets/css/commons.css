@@ -1,0 +1,90 @@
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    z-index: 1000;
+    
+}
+
+.loading__spinner {
+    width: 2rem;
+    height: 2rem;
+    border: 3px solid var(--medium-blue);
+    border-top: 3px solid var(--ghost-white);
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 20%;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--medium-blue);
+    border-radius: 10px;
+
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--ghost-white);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--medium-purple);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background-color: var(--medium-purple-2);
+}
+
+::-webkit-scrollbar-button {
+    display: none;
+}
+
+::-webkit-scrollbar-corner {
+    background-color: var(--ghost-white);
+}
+
+::-webkit-scrollbar-track-piece {
+    background-color: var(--ghost-white);
+}
+
+/* Hide the native checkbox */
+input[type="checkbox"] {
+    display: none;
+}
+
+/* Custom checkbox styling */
+.custom-checkbox {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border: 2px solid var(--medium-purple-2);
+    cursor: pointer;
+    border-radius: 4px; /* Optional: for rounded corners */
+}
+
+/* When the checkbox is checked, change the background color */
+input[type="checkbox"]:checked + .custom-checkbox {
+    background-color: var(--medium-purple-2);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="white" d="M7.629,14.571L3.357,10.3a1,1,0,0,1,0-1.414l1.414-1.414a1,1,0,0,1,1.414,0L8.043,10.086l5.8-5.8a1,1,0,0,1,1.414,0l1.414,1.414a1,1,0,0,1,0,1.414l-7.629,7.629a1,1,0,0,1-1.414,0Z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+
+/* When the checkbox is checked, add a blue background */
+.checkbox input:checked ~ .checkmark {
+    background-color: var(--medium-purple-2);
+}
+
