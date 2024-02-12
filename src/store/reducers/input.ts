@@ -26,7 +26,6 @@ export const inputSlice = createSlice({
             }
         },
         updateChips: (state, action) => {
-            console.log(action.payload)
             // Create a new set from current chips for efficient lookup
             const currentChipsSet = new Set(state.chips);
         
