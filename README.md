@@ -31,6 +31,10 @@ This is the list of the NPM packages that has been used in this project.
 
 ---
 
+### Vercel's Speed Insights
+
+![Speed Insights](speed-insights.png)
+
 ### Contact me for business inquiries
 
 - [More about me can be found in my LinkedIn Profile](https://linkedin.com/in/ayberkenis)
