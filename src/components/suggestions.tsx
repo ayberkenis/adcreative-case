@@ -1,35 +1,46 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useGetCharacterQuery } from "../store/reducers/api";
-import {Character} from "../types/character";
+import { Character } from "../types/character";
 import ActivityIndicator from "./loading";
 import { useDebounce } from "use-debounce";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { updateChips } from "../store/reducers/input";
+import { setSuggestions, updateChips } from "../store/reducers/input";
+import Error from "./error";
 
 export default function Suggestions() {
     const text = useAppSelector((state) => state.input.value);
     const focusedSuggestionIndex = useAppSelector((state) => state.input.focusedSuggestionIndex);
+    const dispatch = useAppDispatch();
     const [debouncedText] = useDebounce(text, 500);
+
     const { data = [], error, isLoading } = useGetCharacterQuery(debouncedText, {
-    // The skip option will prevent the query from running if the text is empty
-        skip: debouncedText.length === 0, 
-        
+        // The skip option will prevent the query from running if the text is empty
+        skip: debouncedText.length === 0,
+
     });
+
+    dispatch(setSuggestions(data));
     const suggestionsRef = useRef<HTMLUListElement>(null);
-    
+    if (error) return <Error />;
 
-    if (error) return <div>Error loading suggestions</div>;
 
-   return (
+    useEffect(() => {
+        // always keep the focused suggestion in view
+        if (suggestionsRef.current && focusedSuggestionIndex !== null) {
+            suggestionsRef.current.children[focusedSuggestionIndex]?.scrollIntoView({ block: 'nearest' });
+        }
+    }, [focusedSuggestionIndex]);
+
+    return (
         <div className={`suggestions-wrapper ${data.length ? 'active' : ''}`}>
             <ul className="suggestions" ref={suggestionsRef}>
                 {!isLoading ? (
                     data.map((suggestion, index) => (
-                        <Suggestion 
+                        <Suggestion
                             isFocused={index === focusedSuggestionIndex}
-                            queryParam={debouncedText} 
-                            key={suggestion.id} 
+                            queryParam={debouncedText}
+                            key={suggestion.id}
                             suggestion={suggestion}
                         />
                     ))
@@ -42,7 +53,7 @@ export default function Suggestions() {
 }
 
 
-export function Suggestion({ queryParam, suggestion, isFocused}: { queryParam: string, suggestion: Character, isFocused: boolean}) {
+export function Suggestion({ queryParam, suggestion, isFocused }: { queryParam: string, suggestion: Character, isFocused: boolean }) {
     const dispatch = useAppDispatch();
     const chips = useAppSelector((state) => state.input.chips);
     const selected = chips.includes(suggestion.name);
@@ -66,24 +77,24 @@ export function Suggestion({ queryParam, suggestion, isFocused}: { queryParam: s
         if (event.type === 'change' && event.target instanceof HTMLInputElement) {
             if (event.target.checked) {
                 suggestionName = suggestionName || event.target.value;
-                
+
             }
         }
         if (event.type === 'click' && suggestionName) {
             dispatch(updateChips(suggestionName));
         }
     };
-    
+
 
 
     return (
         <li onClick={(e) => handleAction(e, suggestion.name)} className={`suggestion-item ${isFocused ? 'focused' : ''}`}>
-                <div className="checkbox">
-                    <input type="checkbox" name="suggestion" id="suggestion" onChange={(e) => handleAction(e, suggestion.name)} checked={selected} />
-                    <label htmlFor="suggestion" className="custom-checkbox"></label>
-                </div>
+            <div className="checkbox">
+                <input type="checkbox" name="suggestion" id="suggestion" onChange={(e) => handleAction(e, suggestion.name)} checked={selected} />
+                <label htmlFor="suggestion" className="custom-checkbox"></label>
+            </div>
             <div className="suggestion-image">
-                <img src={suggestion.image} alt={suggestion.name}/>
+                <img src={suggestion.image} alt={suggestion.name} />
             </div>
             <div className="suggestion-info">
                 <span className="suggestion-name">{boldQueryName(suggestion.name)}</span>

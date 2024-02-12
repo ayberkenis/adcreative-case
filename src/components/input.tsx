@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Chip from './chip'; // Adjust the import path as necessary
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { updateChips, updateInput } from '../store/reducers/input';
+import { incrementFocusIndex, decrementFocusIndex, updateInput, backspaceChips, updateChips } from '../store/reducers/input';
 
 interface TextInputProps {
   chips: string[];
@@ -13,7 +13,9 @@ const TextInput: React.FC<TextInputProps> = ({ chips }) => {
   const [isPlaceholderVisible, setIsPlaceholderVisible] = useState<boolean>(true);
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-
+  const suggestions = useAppSelector((state) => state.input.suggestions);
+  const focusedSuggestionIndex = useAppSelector((state) => state.input.focusedSuggestionIndex) || 0;
+  
   useEffect(() => {
     setIsPlaceholderVisible(text.length === 0 && chips.length === 0);
   }, [chips, text]);
@@ -26,23 +28,26 @@ const TextInput: React.FC<TextInputProps> = ({ chips }) => {
 
   const handleFocus = () => setIsPlaceholderVisible(false);
   const handleBlur = () => setIsPlaceholderVisible(text.length === 0 && chips.length === 0);
+  
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (!ref.current) return;
+      if (e.key === 'Backspace' && (!text || text.length === 0) && chips.length > 0) {
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        console.log('key down')
-        if (!ref.current) return;
-        if (e.key === 'Backspace' && (!ref.current.textContent || ref.current.textContent.length === 0) && chips.length > 0) {
+        dispatch(backspaceChips());
+      } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          dispatch(incrementFocusIndex()) 
 
-          dispatch(updateChips(chips.slice(0, -1)));
-        } else if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
+      } else if (e.key === 'ArrowUp') {
+          dispatch(decrementFocusIndex())
 
-        } else if (e.key === 'Enter') {
-            e.preventDefault();
-        }
-      };
+      } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (text.length < 0) return;
+          // Add the focused suggestion to the chips
+          dispatch(updateChips(suggestions[focusedSuggestionIndex].name))
+      }
+    };
     
   useEffect(() => {
     if (ref.current) {

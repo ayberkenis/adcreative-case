@@ -1,4 +1,3 @@
-import { useCallback, useState } from "react";
 import TextInput from "./input";
 import Suggestions from "./suggestions";
 import { useAppSelector } from "../store/hooks";
